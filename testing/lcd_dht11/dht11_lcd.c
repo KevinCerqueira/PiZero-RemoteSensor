@@ -1,4 +1,5 @@
 #include <wiringPi.h>
+#include <lcd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -6,8 +7,21 @@
 #define DHTPIN		5
 int dht11_dat[5] = { 0, 0, 0, 0, 0 };
  
+ //USE WIRINGPI PIN NUMBERS
+#define LCD_RS 6    // Register select pin
+#define LCD_E 31    // Enable Pin
+#define LCD_D4 26   // Data pin 4
+#define LCD_D5 27   // Data pin 5
+#define LCD_D6 28   // Data pin 6
+#define LCD_D7 29   // Data pin 7
+#define MAXTIMINGS 85
+ 
 void read_dht11_dat()
 {
+	int lcd;
+	// wiringPiSetup();
+	lcd = lcdInit (2, 16, 4, LCD_RS, LCD_E, LCD_D4, LCD_D5, LCD_D6, LCD_D7, 0, 0, 0, 0);
+        
 	uint8_t laststate	= HIGH;
 	uint8_t counter		= 0;
 	uint8_t j		= 0, i;
@@ -51,11 +65,14 @@ void read_dht11_dat()
 	     (dht11_dat[4] == ( (dht11_dat[0] + dht11_dat[1] + dht11_dat[2] + dht11_dat[3]) & 0xFF) ) )
 	{
 		f = dht11_dat[2] * 9. / 5. + 32;
-		printf( "Humidity = %d.%d %% Temperature = %d.%d C (%.1f F)\n",
-			dht11_dat[0], dht11_dat[1], dht11_dat[2], dht11_dat[3], f );
-	}else  {
-		printf( "Data not good, skip\n" );
+		lcdPosition(lcd, 0, 0);
+		lcdPrintf(lcd, "H %d.%d", dht11_dat[0], dht11_dat[1]);
+		lcdPosition(lcd, 0, 1);
+		lcdPrintf(lcd, "T %d.%d C", dht11_dat[2], dht11_dat[3]);
 	}
+	//else  {
+	//	printf( "Data not good, skip\n" );
+	//}
 }
  
 int main( void )
