@@ -3,5 +3,7 @@ FROM python:3
 RUN pip install paho-mqtt
 
 COPY ./src/server/subscriber.py subscriber.py
+COPY ./src/server/database_control.py database_control.py
+COPY ./src/server/database database/
 
 CMD ["python3","subscriber.py"]
