@@ -16,7 +16,7 @@ services:
       dockerfile: Dockerfile-api
     ports:
     - "5000:5000"
-  mqtt:
-    build: 
-      context: .
-      dockerfile: Dockerfile-mqtt
+  # mqtt:
+  #   build: 
+  #     context: .
+  #     dockerfile: Dockerfile-mqtt

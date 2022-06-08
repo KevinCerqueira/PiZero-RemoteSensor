@@ -20,10 +20,11 @@ import base64
 import re
 from collections import deque
 from database_control import DatabaseControl
+from datetime import datetime
 
 class Subscriber:
 
-	HOST = 'mqtt.eclipseprojects.io'
+	HOST = 'broker.emqx.io'
 	PORT = 1883
 	
 	# Servidor
@@ -43,6 +44,8 @@ class Subscriber:
 	
 	close = False
 	
+	log_directory = ''
+	
 	def __init__(self):
 		# Iniciando o Server
 		self.mqtt_server = mqtt.Client('G02_THEBESTGROUP')
@@ -52,17 +55,22 @@ class Subscriber:
 		self.queue_request = deque()
 		self.thread_request = threading.Thread(target=self.queue)
 		self.thread_request.start()
-		print('SERVER ON\n')
+		self.log_directory = os.path.dirname(os.path.realpath(__file__)) + '/logs/subscriber.log'
+		self.log('SERVER ON')
 		self.work()
 	
 	def on_connect(self, client, userdata, flags, rc):
 		self.mqtt_server.subscribe(self.topic)
-		print("Connected to a broker!")
+		self.log("Connected to a broker!")
 
 	def on_message(self, client, userdata, message):
-		print(message.payload.decode())
+		self.log("FROM ["+self.HOST+":"+str(self.PORT)+"]: " + str(message.payload.decode()))
 		self.receptor(message.payload.decode())
-	
+		
+	def log(self, msg):
+		with open(self.log_directory, 'a', encoding='utf-8') as log_file:
+			log_file.write("[" + str(datetime.now()) +"] "+ msg + '\n')
+		return True
 	# Função principal, onde o servidor irá receber as conexões
 	def work(self):
 		while not self.close:
@@ -71,7 +79,7 @@ class Subscriber:
 			self.mqtt_server.loop_forever()
 		
 		if(self.close and len(self.queue_request) == 0):
-			print('SERVER OFF')
+			self.log('SERVER OFF')
 			return sys.exit()
 	
 	# Trata os dados recebidos
@@ -80,11 +88,11 @@ class Subscriber:
 		
 		# Verificando se é realmente o cliente
 		if('raspberry' not in request):
-			print('Conexão externa.')
+			self.log('Conexão externa.')
 			return
 		
-		if('close' not in request):
-			print('Fechando o servidor.')
+		if('close' in request):
+			self.log('Fechando o servidor.')
 			self.close = True
 			sys.exit()
 			
@@ -100,28 +108,25 @@ class Subscriber:
 	def queue(self):
 		while True:
 			if(len(self.queue_request) > 0):
-				print('conn: ' + str(len(self.queue_request)))
+				self.log('Connections: ' + str(len(self.queue_request)))
 				request = self.queue_request.popleft()
 				self.routing(request['data'])
 	
 	# Função responsável pelo roteamente, identifica os metodos e as rotas requisitadas
 	def routing(self, data):
-		print('...')
-		print(data)
-		print('...')
 		if('H' not in data or 'T' not in data or 'P' not in data or 'L' not in data):
 			return self.data_not_found()
 		return self.insert_measure(data)
 	# Envia dados para o cliente em caso de sucesso
 	def send_to_client_ok(self, obj):
 		response = json.dumps({'success': True, 'data': obj})
-		print(response)
+		# self.log(response)
 		return True
 	
 	# Envia dados para o cliente em caso de erro
 	def send_to_client_error(self, msg):
 		response = json.dumps({'success': False, 'error': msg})
-		print(response)
+		# self.log(response)
 		return False
 	
 	# Caso a rota informada não esteja dentre as disponiveis

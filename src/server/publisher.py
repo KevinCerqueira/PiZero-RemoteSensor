@@ -15,7 +15,7 @@ import paho.mqtt.client as mqtt
 
 class Subscriber:
 
-	HOST = 'mqtt.eclipseprojects.io'
+	HOST = 'broker.emqx.io'
 	PORT = 1883
 	
 	# Servidor
