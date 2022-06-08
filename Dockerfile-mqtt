@@ -1,0 +1,7 @@
+FROM python:3
+
+RUN pip install paho-mqtt
+
+COPY ./src/server/subscriber.py subscriber.py
+
+CMD ["python3","subscriber.py"]

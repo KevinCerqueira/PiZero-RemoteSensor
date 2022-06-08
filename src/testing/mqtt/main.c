@@ -13,8 +13,8 @@
 #define CLIENTID       "G02_THEBESTGROUP"  
  
 /* Substitua aqui os topicos de publish e subscribe por topicos exclusivos de sua aplicacao */
-#define MQTT_PUBLISH_TOPIC     "G02_THEBESTGROUP/PUBLISH"
-#define MQTT_SUBSCRIBE_TOPIC   "G02_THEBESTGROUP/SUBSCRIBE"
+#define MQTT_PUBLISH_TOPIC     "G02_THEBESTGROUP/INTERVALO"
+#define MQTT_SUBSCRIBE_TOPIC   "G02_THEBESTGROUP/MEDICOES"
  
 /*
 *  Variaveis globais
