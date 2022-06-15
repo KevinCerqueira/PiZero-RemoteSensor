@@ -15,7 +15,7 @@ import paho.mqtt.client as mqtt
 
 class Subscriber:
 
-	HOST = 'broker.emqx.io'
+	HOST = '10.0.0.101'
 	PORT = 1883
 	
 	# Servidor
@@ -37,10 +37,11 @@ class Subscriber:
 	
 	def __init__(self):
 		# Iniciando o Server
-		self.mqtt_server = mqtt.Client('G02_THEBESTGROUP')
+		self.mqtt_server = mqtt.Client('G02_THEBESTGROUP_PUB')
+		self.mqtt_server.username_pw_set("aluno", "aluno*123")
 		self.mqtt_server.on_publish = self.on_publish
 		self.mqtt_server.connect(self.HOST, self.PORT)
-		self.topic = 'G02_THEBESTGROUP/INTERVALO'
+		self.topic = 'G02_THEBESTGROUP/MEDICOES'
 		print('SERVER ON\n')
 
 	def on_publish(self, client, userdata, result):
@@ -48,9 +49,9 @@ class Subscriber:
 	
 	# Função principal, onde o servidor irá receber as conexões
 	def send(self, data):
-		return self.mqtt_server.publish(data)
+		return self.mqtt_server.publish(self.topic, data)
 
 if __name__ == '__main__':
 	server = Subscriber()
-	server.send('teste123')
+	server.send('raspberry {"H": "555", "T": "100", "P": "100", "L": "100"}')
 			

@@ -24,7 +24,7 @@ from datetime import datetime
 
 class Subscriber:
 
-	HOST = 'broker.emqx.io'
+	HOST = '10.0.0.101'
 	PORT = 1883
 	
 	# Servidor
@@ -48,7 +48,8 @@ class Subscriber:
 	
 	def __init__(self):
 		# Iniciando o Server
-		self.mqtt_server = mqtt.Client('G02_THEBESTGROUP')
+		self.mqtt_server = mqtt.Client('G02_THEBESTGROUP_SUB')
+		self.mqtt_server.username_pw_set("aluno", "aluno*123")
 		self.mqtt_server.connect(self.HOST, self.PORT)
 		self.topic = 'G02_THEBESTGROUP/MEDICOES'
 		self.db_control = DatabaseControl()
@@ -60,11 +61,19 @@ class Subscriber:
 		self.work()
 	
 	def on_connect(self, client, userdata, flags, rc):
+		if(rc == 0):
+			self.mqtt_server.subscribe(self.topic)
+			self.log("Connected to a broker!")
+		else:
+			self.log("Bad Connection! Returned code: " + str(rc))
+		
+	def on_disconnect(self, client, userdata, flags):
 		self.mqtt_server.subscribe(self.topic)
-		self.log("Connected to a broker!")
+		self.log("Disconnected to a broker!")
 
 	def on_message(self, client, userdata, message):
-		self.log("FROM ["+self.HOST+":"+str(self.PORT)+"]: " + str(message.payload.decode()))
+		self.log("[FROM "+self.HOST+":"+str(self.PORT)+"]: " + str(message.payload.decode()))
+		print(message.payload.decode())
 		self.receptor(message.payload.decode())
 		
 	def log(self, msg):
@@ -73,13 +82,15 @@ class Subscriber:
 		return True
 	# Função principal, onde o servidor irá receber as conexões
 	def work(self):
-		while not self.close:
-			self.mqtt_server.on_connect = self.on_connect
-			self.mqtt_server.on_message = self.on_message
-			self.mqtt_server.loop_forever()
+		# while not self.close:
+		self.mqtt_server.on_connect = self.on_connect
+		self.mqtt_server.on_disconnect = self.on_disconnect
+		self.mqtt_server.on_message = self.on_message
+		self.mqtt_server.loop_forever()
 		
 		if(self.close and len(self.queue_request) == 0):
 			self.log('SERVER OFF')
+			self.mqtt_server.disconnect()
 			return sys.exit()
 	
 	# Trata os dados recebidos
@@ -120,13 +131,11 @@ class Subscriber:
 	# Envia dados para o cliente em caso de sucesso
 	def send_to_client_ok(self, obj):
 		response = json.dumps({'success': True, 'data': obj})
-		# self.log(response)
 		return True
 	
 	# Envia dados para o cliente em caso de erro
 	def send_to_client_error(self, msg):
 		response = json.dumps({'success': False, 'error': msg})
-		# self.log(response)
 		return False
 	
 	# Caso a rota informada não esteja dentre as disponiveis
