@@ -8,7 +8,7 @@
 * Defines
 */
 /* Caso desejar utilizar um broker MQTT diferente do iot.eclipse.org, substitua o endereco abaixo pelo do broker desejado */
-#define MQTT_ADDRESS   "tcp://mqtt.eclipseprojects.io:1883"
+#define MQTT_ADDRESS   "tcp://broker.emqx.io:1883"
 /* Substitua este por um ID unico em sua aplicacao */
 #define CLIENTID       "G02_THEBESTGROUP"  
  
@@ -59,7 +59,7 @@ int on_message(void *context, char *topicName, int topicLen, MQTTClient_message 
  
     /* Faz echo da mensagem recebida no tópico de publish */
     // publish(client, MQTT_PUBLISH_TOPIC, payload);
- 
+    publish(client, MQTT_PUBLISH_TOPIC, "Mensagem recebida!");
     MQTTClient_freeMessage(&message);
     MQTTClient_free(topicName);
     return 1;
