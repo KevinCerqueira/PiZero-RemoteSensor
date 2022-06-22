@@ -11,9 +11,13 @@
  * de avaliação. Alguns trechos do código podem coincidir com de outros
  * colegas pois estes foram discutidos em sessões tutorias.
 """
+from cmath import log
 import paho.mqtt.client as mqtt
+from datetime import datetime
+from datetime import date
+import os
 
-class Subscriber:
+class Publisher:
 
 	HOST = '10.0.0.101'
 	PORT = 1883
@@ -35,23 +39,33 @@ class Subscriber:
 	
 	close = False
 	
+	log_directory = ''
+	
 	def __init__(self):
 		# Iniciando o Server
 		self.mqtt_server = mqtt.Client('G02_THEBESTGROUP_PUB')
 		self.mqtt_server.username_pw_set("aluno", "aluno*123")
 		self.mqtt_server.on_publish = self.on_publish
 		self.mqtt_server.connect(self.HOST, self.PORT)
-		self.topic = 'G02_THEBESTGROUP/MEDICOES'
+		self.topic = 'G02_THEBESTGROUP/INTERVALO'
+		self.log_directory = os.path.dirname(os.path.realpath(__file__)) + '/logs/log_' + str(date.today()) + '.log'
+		
 		print('SERVER ON\n')
 
 	def on_publish(self, client, userdata, result):
-		print('Data published: {}'.format(result))
+		self.log('Data published: {}'.format(result))
 	
 	# Função principal, onde o servidor irá receber as conexões
 	def send(self, data):
+		self.log('Sendind data to broker: {}'.format(data))
 		return self.mqtt_server.publish(self.topic, data)
+		
+	def log(self, msg):
+		with open(self.log_directory, 'a', encoding='utf-8') as log_file:
+			log_file.write("PUBLISHER [" + str(datetime.now()) +"] "+ msg + '\n')
+		return True
 
 if __name__ == '__main__':
-	server = Subscriber()
-	server.send('raspberry {"H": "555", "T": "100", "P": "100", "L": "100"}')
+	server = Publisher()
+	server.send('g02p3EGK {"H": "555", "T": "100", "P": "100", "L": "100"}')
 			

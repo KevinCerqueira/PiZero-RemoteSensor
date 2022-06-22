@@ -10,12 +10,12 @@ services:
       - ./src/web:/var/www/html
       - ./apache.conf:/etc/apache2/sites-available/
       - ./php.ini:/etc/php/7.4/apache2/
-  api:
-    build: 
-      context: .
-      dockerfile: Dockerfile-api
-    ports:
-    - "5000:5000"
+  # api:
+  #   build: 
+  #     context: .
+  #     dockerfile: Dockerfile-api
+  #   ports:
+  #   - "5000:5000"
   # mqtt:
   #   build: 
   #     context: .

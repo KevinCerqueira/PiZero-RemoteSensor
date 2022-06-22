@@ -21,6 +21,7 @@ import re
 from collections import deque
 from database_control import DatabaseControl
 from datetime import datetime
+from datetime import date
 
 class Subscriber:
 
@@ -56,7 +57,7 @@ class Subscriber:
 		self.queue_request = deque()
 		self.thread_request = threading.Thread(target=self.queue)
 		self.thread_request.start()
-		self.log_directory = os.path.dirname(os.path.realpath(__file__)) + '/logs/subscriber.log'
+		self.log_directory = os.path.dirname(os.path.realpath(__file__)) + '/logs/log_' + str(date.today()) + '.log'
 		self.log('SERVER ON')
 		self.work()
 	
@@ -78,7 +79,7 @@ class Subscriber:
 		
 	def log(self, msg):
 		with open(self.log_directory, 'a', encoding='utf-8') as log_file:
-			log_file.write("[" + str(datetime.now()) +"] "+ msg + '\n')
+			log_file.write("SUBSCRIBER [" + str(datetime.now()) +"] "+ msg + '\n')
 		return True
 	# Função principal, onde o servidor irá receber as conexões
 	def work(self):
@@ -98,7 +99,7 @@ class Subscriber:
 		data = None
 		
 		# Verificando se é realmente o cliente
-		if('raspberry' not in request):
+		if('g02pb3EGK' not in request):
 			self.log('Conexão externa.')
 			return
 		

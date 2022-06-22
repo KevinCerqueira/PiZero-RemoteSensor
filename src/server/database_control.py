@@ -61,6 +61,7 @@ class DatabaseControl:
 	# Retornar todos os dados de um determinado arquivo.
 	def get_all(self, db_file):
 		with open(self.directory + db_file, 'r', encoding='utf-8') as db_read:
+			# print(json.load(db_read))
 			return json.load(db_read)
 		return None
 	
@@ -79,7 +80,10 @@ class DatabaseControl:
 		qntd = len(measures)
 		if(qntd <= count):
 			return measures
-		return list(measures)[-count:]
+		last_10 = []
+		for measure in list(measures)[-count:]:
+			last_10.append(measures[measure])
+		return last_10
 	
 	# Retorna todos os pacientes de um determinado medico
 	def get_all_measures(self):
@@ -102,5 +106,5 @@ class DatabaseControl:
 		
 if __name__ == '__main__':
 	c = DatabaseControl()
-	c.insert_measure({"H": "100", "T": "100", "P": "100", "L": "100"})
+	# c.insert_measure({"H": "100", "T": "100", "P": "100", "L": "100"})
 	print(c.get_last_qntd(10))
