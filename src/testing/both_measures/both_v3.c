@@ -1,11 +1,18 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <fcntl.h>
 #include <stdint.h>
 #include <time.h>
 #include <pthread.h>
+#include <math.h>
+
+#include <wiringPi.h>
+#include <linux/i2c-dev.h>
+#include <sys/ioctl.h>
+#include <fcntl.h>
+#include <lcd.h>
+
+#include "constants.h"
 
 int dht_matrix[6][10] = {{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
                         {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
@@ -21,14 +28,14 @@ int dht11_dat[5] = {0, 0, 0, 0, 0};
 double lum_dat = 0;
 double pressure_dat = 0;
 int lcd; 
-int delay_time = 2000;
+int delay_time = 5000;
 int max_hist = 0;
 
 //USE WIRINGPI PIN NUMBERS
 #define MAXTIMINGS      85
-#define DHTPIN          1
+#define DHTPIN          4
 
-#define BTN_1 4
+#define BTN_1 21
 #define BTN_2 24
 #define BTN_3 25
 
@@ -61,7 +68,7 @@ void dht_insert(int value, int list_index, int element_index){
         return;
     }
     else{
-        insert(temp, list_index, element_index+1);
+        dht_insert(temp, list_index, element_index+1);
     }
 }
 
@@ -149,7 +156,7 @@ void print_poten_data(int hist){
         lcdPrintf(lcd, "LUMI #%d: %.2f W", hist+1, poten_matrix[0][hist]);
 
         lcdPosition(lcd, 0, 1);
-        lcdPrintf(lcd, "PRESS #%d: %.2f Pa", hist+1, poten_matrix[1][hist];
+        lcdPrintf(lcd, "PRESS #%d: %.2f Pa", hist+1, poten_matrix[1][hist]);
 }
 
 void read_sensors(){
@@ -167,11 +174,10 @@ void print_delay(){
 void* measure_thread(void* arg){
     while(1){
         clock_t start = clock();
-        while(clock() < start + delay_time)
-            ;
+        delay(delay_time);
         printf("%d Miliseconds have passed.\n", delay_time);
         read_sensors();
-        max_hist = __min(9, max_hist+1);
+        max_hist = fmin(9, max_hist+1);
         printf("Measures taken. \n");
         start = clock();
     }
@@ -260,11 +266,11 @@ int main(){
         else {
             if(bt_in3){
                 // later
-                hist_index = __min(max_hist, hist_index+1); 
+                hist_index = fmin(max_hist, hist_index+1); 
             }
             else if(bt_in1){
                 // earlier
-                hist_index = __max(0, hist_index-1); 
+                hist_index = fmax(0, hist_index-1); 
             }
             if(measureMode == 0){
                 print_poten_data(hist_index);
