@@ -39,8 +39,8 @@ class DatabaseControl:
 		
 		# Atribuindo um novo ID para o paciente
 		new_id = int(self.get_last_id(self.db_measure_path)) + 1
-		time_measure = str(datetime.now())
-		new_data = {'id': new_id, 'uuid': str(uuid.uuid4()), 'H': data['H'], 'T': data['T'], 'P': data['P'], 'L': data['T'], 'datetime': time_measure}
+		# time_measure = str(datetime.now())
+		new_data = {'id': new_id, 'uuid': str(uuid.uuid4()), 'H': data['H'], 'T': data['T'], 'P': data['P'], 'L': data['T'], 'datetime': data['datetime']}
 		
 		# Pega todas as medicoes e adiciona a nova no final delas
 		current_data = self.get_all(self.db_measure_path)

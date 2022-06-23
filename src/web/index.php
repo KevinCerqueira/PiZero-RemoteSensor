@@ -13,6 +13,10 @@
 	<link href="vendor/bootstrap-5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
 	<script src="vendor/bootstrap-5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 
+	<!-- jquery 3.6.0 -->
+	<script src="vendor/jquery/jquery-3.6.0.min.js"></script>
+
+	
 	<style>
 		.centro {
 			width: 100%;
@@ -30,7 +34,8 @@
 			/* e retrocede metade da altura */
 			/* margin: 0% 5% 0% 5%; */
 		}
-		.p-10{
+
+		.p-10 {
 			padding: 10%;
 		}
 	</style>
@@ -61,6 +66,52 @@
 			</div>
 		</div>
 	</div>
+
+	<script>
+		// setInterval(requestData, 3000);
+		// async function requestData() {
+		// 	await $.ajax({
+		// 		type: "GET",
+		// 		url: "controllers/measures.php",
+		// 		dataType: "html",
+		// 		beforeSend: function() {
+		// 			$('#alert-error').attr('hidden', '');
+		// 			$('#alert-text-error').text('');
+
+		// 			if ($('#count').text() == '0') {
+		// 				$('#loading').removeAttr('hidden');
+		// 			}
+		// 		},
+		// 		success: function(data) {
+		// 			response = JSON.parse(data);
+		// 			if (response.success) {
+		// 				$('.lists').empty();
+
+		// 				$("#high").append(response.data.high);
+		// 				$("#medium").append(response.data.medium);
+		// 				$("#normal").append(response.data.normal);
+		// 				$('#count').text(parseInt($('#count').text()) + 1);
+		// 				if (response.alert) {
+		// 					console.log(sound.play());
+		// 				}
+		// 			} else {
+		// 				$('#alert-error').removeAttr('hidden');
+		// 				$('#alert-text-error').text('Não foi possível carregar a lista: ' + response.error);
+		// 			}
+
+		// 		},
+		// 		error: function(data) {
+		// 			console.log(data);
+		// 			$('#alert-error').removeAttr('hidden');
+		// 			$('#alert-text-error').text('Parece que estamos offline. Chame o TI!');
+		// 		},
+		// 		complete: function() {
+		// 			$('#priorities').removeAttr('hidden');
+		// 			$('#loading').attr('hidden', '');
+		// 		}
+		// 	});
+		// }
+	</script>
 
 </body>
 

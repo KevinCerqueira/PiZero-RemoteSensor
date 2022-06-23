@@ -18,19 +18,16 @@ import os
 import threading
 import base64
 import re
+import util
 from collections import deque
 from database_control import DatabaseControl
 from datetime import datetime
 from datetime import date
 
 class Subscriber:
-
-	HOST = '10.0.0.101'
-	PORT = 1883
 	
-	# Servidor
-	server_socket = None
-	
+	HOST = ''
+	PORT = 0
 	mqtt_server = None
 	
 	topic = ''
@@ -41,24 +38,30 @@ class Subscriber:
 	queue_request = None
 	thread_request = None
 	
-	controllevels = None
-	
 	close = False
 	
-	log_directory = ''
+	return_codes = ["Connection successful", "Connection refused – incorrect protocol version", "Connection refused – invalid client identifier", "Connection refused – server unavailable", "Connection refused – bad username or password", "Connection refused – not authorised"]
 	
 	def __init__(self):
+		
 		# Iniciando o Server
-		self.mqtt_server = mqtt.Client('G02_THEBESTGROUP_SUB')
-		self.mqtt_server.username_pw_set("aluno", "aluno*123")
+		self.HOST = 'broker.emqx.io' # util.env('BROKER_HOST')
+		self.PORT = int(util.env('BROKER_PORT'))
+		
+		self.mqtt_server = mqtt.Client(util.env('CLIENTID_SUB'))
+		self.mqtt_server.username_pw_set(util.env('BROKER_USER'), util.env('BROKER_PASS'))
 		self.mqtt_server.connect(self.HOST, self.PORT)
-		self.topic = 'G02_THEBESTGROUP/MEDICOES'
-		self.db_control = DatabaseControl()
+		
+		self.topic = "G02_THEBESTGROUP/MEDICOES" # util.env('TOPICO_MEDICOES')
+		
 		self.queue_request = deque()
 		self.thread_request = threading.Thread(target=self.queue)
 		self.thread_request.start()
-		self.log_directory = os.path.dirname(os.path.realpath(__file__)) + '/logs/log_' + str(date.today()) + '.log'
-		self.log('SERVER ON')
+		
+		self.db_control = DatabaseControl()
+		
+		self.log('SERVER READY')
+		
 		self.work()
 	
 	def on_connect(self, client, userdata, flags, rc):
@@ -66,7 +69,11 @@ class Subscriber:
 			self.mqtt_server.subscribe(self.topic)
 			self.log("Connected to a broker!")
 		else:
-			self.log("Bad Connection! Returned code: " + str(rc))
+			if(rc < 6):
+				self.log("Bad Connection! Returned code: " + str(self.return_codes[int(rc)]))
+			else:
+				self.log("Bad Connection! Returned undefined code: " + str(rc))
+				
 		
 	def on_disconnect(self, client, userdata, flags):
 		self.mqtt_server.subscribe(self.topic)
@@ -74,13 +81,11 @@ class Subscriber:
 
 	def on_message(self, client, userdata, message):
 		self.log("[FROM "+self.HOST+":"+str(self.PORT)+"]: " + str(message.payload.decode()))
-		print(message.payload.decode())
 		self.receptor(message.payload.decode())
 		
 	def log(self, msg):
-		with open(self.log_directory, 'a', encoding='utf-8') as log_file:
-			log_file.write("SUBSCRIBER [" + str(datetime.now()) +"] "+ msg + '\n')
-		return True
+		util.log('SUB', msg)
+
 	# Função principal, onde o servidor irá receber as conexões
 	def work(self):
 		# while not self.close:
@@ -99,15 +104,17 @@ class Subscriber:
 		data = None
 		
 		# Verificando se é realmente o cliente
-		if('g02pb3EGK' not in request):
+		if(util.env('MQTT_PERSONAL_KEY') not in request):
 			self.log('Conexão externa.')
 			return
 		
+		# Recebendo requisição para fechar o servidor
 		if('close' in request):
 			self.log('Fechando o servidor.')
 			self.close = True
 			sys.exit()
-			
+		
+		# Buscando pelo json contendo os dados na requisição
 		for index in request:
 			if(index == '{'):
 				data = json.loads(request[request.find('{') : request.find('}') + 1])
@@ -115,6 +122,8 @@ class Subscriber:
 		# Adicionando a requisição a fila de requisições
 		if(index != None):
 			self.queue_request.append({'data': data})
+		else:
+			self.data_not_found()
 	
 	# Consome a fila de requisições
 	def queue(self):
@@ -126,30 +135,20 @@ class Subscriber:
 	
 	# Função responsável pelo roteamente, identifica os metodos e as rotas requisitadas
 	def routing(self, data):
-		if('H' not in data or 'T' not in data or 'P' not in data or 'L' not in data):
+		if('H' not in data or 'T' not in data or 'P' not in data or 'L' not in data or 'datetime' not in data):
 			return self.data_not_found()
 		return self.insert_measure(data)
-	# Envia dados para o cliente em caso de sucesso
-	def send_to_client_ok(self, obj):
-		response = json.dumps({'success': True, 'data': obj})
-		return True
-	
-	# Envia dados para o cliente em caso de erro
-	def send_to_client_error(self, msg):
-		response = json.dumps({'success': False, 'error': msg})
-		return False
 	
 	# Caso a rota informada não esteja dentre as disponiveis
 	def data_not_found(self):
-		return self.send_to_client_error('Nao foram encontrado corretos dados na requisicao')
+		self.log('Dados da requisicao incorretos.')
 
 	# Atualiza todos os atributos de um paciente
 	def insert_measure(self, data):
 		success = self.db_control.insert_measure(data)
 		if(success == False):
-			return self.send_to_client_error('Nao foi possivel inserir a medicao.')
-		
-		return self.send_to_client_ok(success)
+			self.log('Nao foi possivel inserir a medicao.')
+		return True
 
 if __name__ == '__main__':
 	server = Subscriber()

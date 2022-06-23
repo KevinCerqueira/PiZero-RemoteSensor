@@ -6,7 +6,7 @@ class Controller
 
 	public function __construct()
 	{
-		$this->api = 'http://10.0.0.109:5000';
+		$this->api = "http://".$_SERVER['REMOTE_ADDR'].":5000";
 	}
 
 	public function getLast10Measures(): array

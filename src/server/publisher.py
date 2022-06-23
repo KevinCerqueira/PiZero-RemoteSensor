@@ -11,19 +11,13 @@
  * de avaliação. Alguns trechos do código podem coincidir com de outros
  * colegas pois estes foram discutidos em sessões tutorias.
 """
-from cmath import log
+import util
 import paho.mqtt.client as mqtt
-from datetime import datetime
-from datetime import date
-import os
 
 class Publisher:
-
-	HOST = '10.0.0.101'
-	PORT = 1883
 	
-	# Servidor
-	server_socket = None
+	HOST = ''
+	PORT = 0
 	
 	mqtt_server = None
 	
@@ -39,31 +33,35 @@ class Publisher:
 	
 	close = False
 	
-	log_directory = ''
+	app = None
 	
 	def __init__(self):
 		# Iniciando o Server
-		self.mqtt_server = mqtt.Client('G02_THEBESTGROUP_PUB')
-		self.mqtt_server.username_pw_set("aluno", "aluno*123")
+		self.HOST = 'broker.emqx.io' # util.env('BROKER_HOST')
+		self.PORT = int(util.env('BROKER_PORT'))
+		
+		self.mqtt_server = mqtt.Client(util.env('CLIENTID_PUB'))
+		self.mqtt_server.username_pw_set(util.env('BROKER_USER'), util.env('BROKER_PASS'))
 		self.mqtt_server.on_publish = self.on_publish
 		self.mqtt_server.connect(self.HOST, self.PORT)
-		self.topic = 'G02_THEBESTGROUP/INTERVALO'
-		self.log_directory = os.path.dirname(os.path.realpath(__file__)) + '/logs/log_' + str(date.today()) + '.log'
 		
-		print('SERVER ON\n')
+		self.topic = "G02_THEBESTGROUP/INTERVALO" # util.env('TOPICO_INTERVALO')
+		
+		self.log('SERVER READY')
 
+	
+	# Quando houver uma publicação
 	def on_publish(self, client, userdata, result):
 		self.log('Data published: {}'.format(result))
 	
 	# Função principal, onde o servidor irá receber as conexões
 	def send(self, data):
-		self.log('Sendind data to broker: {}'.format(data))
+		self.log('Sending data to broker: {}'.format(data))
 		return self.mqtt_server.publish(self.topic, data)
-		
+	
+	# Log do sistema
 	def log(self, msg):
-		with open(self.log_directory, 'a', encoding='utf-8') as log_file:
-			log_file.write("PUBLISHER [" + str(datetime.now()) +"] "+ msg + '\n')
-		return True
+		util.log('PUB', msg)
 
 if __name__ == '__main__':
 	server = Publisher()
