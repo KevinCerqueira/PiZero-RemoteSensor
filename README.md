@@ -2,7 +2,7 @@
 
 ### Comando para compilar código na raspberry:
 ```sh
-$ gcc file1.c file2.c -o executable -lwiringPi -lwiringPiDev
+$ gcc file1.c read_voltage.c -o executable  -lwiringPi -lwiringPiDev -lm -lpthread -lmosquitto
 ```
 ### Comando para startar o container da view em PHP e a API em Python:
 ```sh
