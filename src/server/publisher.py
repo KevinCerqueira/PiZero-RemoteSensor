@@ -13,6 +13,9 @@
 """
 import util
 import paho.mqtt.client as mqtt
+import os
+from dotenv import load_dotenv
+
 
 class Publisher:
 	
@@ -37,15 +40,22 @@ class Publisher:
 	
 	def __init__(self):
 		# Iniciando o Server
-		self.HOST = 'broker.emqx.io' # util.env('BROKER_HOST')
-		self.PORT = int(util.env('BROKER_PORT'))
+		load_dotenv()
+
+		self.HOST = os.getenv('BROKER_HOST')
+		self.PORT = int(os.getenv('BROKER_PORT'))
 		
-		self.mqtt_server = mqtt.Client(util.env('CLIENTID_PUB'))
-		self.mqtt_server.username_pw_set(util.env('BROKER_USER'), util.env('BROKER_PASS'))
+		# self.mqtt_server = mqtt.Client(os.getenv('CLIENTID_PUB'))
+		# self.mqtt_server.username_pw_set(os.getenv('BROKER_USER'), os.getenv('BROKER_PASS'))
+		self.mqtt_server = mqtt.Client("G02_THEBESTGROUP_PUB")
+		self.mqtt_server.username_pw_set("aluno", "aluno*123")
 		self.mqtt_server.on_publish = self.on_publish
-		self.mqtt_server.connect(self.HOST, self.PORT)
+		# self.mqtt_server.connect(self.HOST, self.PORT)
+		# self.mqtt_server.connect("broker.emqx.io", 1883)
 		
-		self.topic = "G02_THEBESTGROUP/INTERVALO" # util.env('TOPICO_INTERVALO')
+		
+		# self.topic = os.getenv('TOPICO_INTERVALO')
+		self.topic = 'G02_THEBESTGROUP/INTERVALO'
 		
 		self.log('SERVER READY')
 
@@ -56,8 +66,11 @@ class Publisher:
 	
 	# Função principal, onde o servidor irá receber as conexões
 	def send(self, data):
+		self.mqtt_server.connect("10.0.0.101", 1883)
 		self.log('Sending data to broker: {}'.format(data))
-		return self.mqtt_server.publish(self.topic, data)
+		response = self.mqtt_server.publish(self.topic, data)
+		self.mqtt_server.disconnect()
+		return response
 	
 	# Log do sistema
 	def log(self, msg):
@@ -65,5 +78,5 @@ class Publisher:
 
 if __name__ == '__main__':
 	server = Publisher()
-	server.send('g02p3EGK {"H": "555", "T": "100", "P": "100", "L": "100"}')
+	server.send("g02pb3EGK {'interval':2}")
 			

@@ -2,10 +2,20 @@ FROM python:3
 
 RUN pip install --upgrade pip
 RUN pip install flask
+RUN pip install paho-mqtt
+RUN pip install python-dotenv
 
-COPY ./src/server/database_control.py database_control.py
-COPY ./src/server/publisher.py publisher.py
-COPY ./src/server/api.py api.py
-COPY ./src/server/database database/
+# COPY ./src/server/database_control.py database_control.py
+# COPY ./src/server/publisher.py publisher.py
+# COPY ./src/server/api.py api.py
+# COPY ./src/server/util.py util.py
+# COPY ./src/server/.env .env
+# COPY ./src/server/home.html home.html
+# COPY ./src/server/database database/
+# COPY ./src/server/logs logs/
+
+COPY ./src/server/ .
+
+RUN chmod 777 -R logs/
 
 CMD ["python3","api.py"]

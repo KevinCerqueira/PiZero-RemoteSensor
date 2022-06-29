@@ -23,6 +23,7 @@ from collections import deque
 from database_control import DatabaseControl
 from datetime import datetime
 from datetime import date
+from dotenv import load_dotenv
 
 class Subscriber:
 	
@@ -45,14 +46,19 @@ class Subscriber:
 	def __init__(self):
 		
 		# Iniciando o Server
-		self.HOST = 'broker.emqx.io' # util.env('BROKER_HOST')
-		self.PORT = int(util.env('BROKER_PORT'))
+		load_dotenv()
 		
-		self.mqtt_server = mqtt.Client(util.env('CLIENTID_SUB'))
-		self.mqtt_server.username_pw_set(util.env('BROKER_USER'), util.env('BROKER_PASS'))
-		self.mqtt_server.connect(self.HOST, self.PORT)
+		self.HOST = str(os.getenv('BROKER_HOST'))
+		self.PORT = int(os.getenv('BROKER_PORT'))
+
+		self.mqtt_server = mqtt.Client(os.getenv('CLIENTID_SUB'))
+		self.mqtt_server.username_pw_set(os.getenv('BROKER_USER'), os.getenv('BROKER_PASS'))
+		# self.mqtt_server.connect(self.HOST, self.PORT)
+		# self.mqtt_server.connect("broker.emqx.io", 1883)
+		self.mqtt_server.connect("10.0.0.101", 1883)
 		
-		self.topic = "G02_THEBESTGROUP/MEDICOES" # util.env('TOPICO_MEDICOES')
+		
+		self.topic = os.getenv('TOPICO_MEDICOES')
 		
 		self.queue_request = deque()
 		self.thread_request = threading.Thread(target=self.queue)
@@ -104,7 +110,7 @@ class Subscriber:
 		data = None
 		
 		# Verificando se é realmente o cliente
-		if(util.env('MQTT_PERSONAL_KEY') not in request):
+		if(os.getenv('MQTT_PERSONAL_KEY') not in str(request)):
 			self.log('Conexão externa.')
 			return
 		

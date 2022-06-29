@@ -12,26 +12,22 @@
  * colegas pois estes foram discutidos em sessões tutorias.
 """
 import os
+from dotenv import load_dotenv
 import platform
 from datetime import datetime
 from datetime import date
-
-# Pega os dados no arquivo .env (variáveis de ambiente)
-def env(var):
-	env = '\\..\\.env'
-	if(platform.system() == 'Linux'):
-		env = '/../.env'
-		
-	with open(os.path.dirname(os.path.realpath(__file__)) + env, 'r', encoding='utf-8') as file_env:
-		line = file_env.readline()
-		while(line):
-			content = line.split('=')
-			if(content[0] == var):
-				return content[1]
-			line = file_env.readline()
+import socket
 
 # Grava mensagens no LOG do sistema (arquivo logs/log_ANO-MES-DIA.log)
 def log(origin, msg):
 	with open(os.path.dirname(os.path.realpath(__file__)) + '/logs/log_' + str(date.today()) + '.log', 'a', encoding='utf-8') as log_file:
 		log_file.write("[" + str(datetime.now()) + "][" + origin + "] " + msg + '\n')
 	return True
+	
+# hostname=socket.gethostname()
+# IPAddr=socket.gethostbyname(hostname)
+# print(socket.gethostbyname(IPAddr))
+# print(env('MQTT_PERSONAL_KEY'))
+# key = "BROKER_PORT"
+# print(os.getenv(key, default=None))
+# log('oi', 'as')

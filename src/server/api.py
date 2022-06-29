@@ -12,27 +12,51 @@
  * colegas pois estes foram discutidos em sessões tutorias.
 """
 
-from flask import Flask
+from flask import Flask, render_template
 from flask import jsonify
 from flask import request
 from database_control import DatabaseControl
 from publisher import Publisher
+import paho.mqtt.client as mqtt
+
 
 database = DatabaseControl()
-publisher = Publisher()
-app = Flask(__name__)
+pub = Publisher()
+
+app = Flask(__name__, template_folder='./')
+
+@app.route("/")
+def home():
+    return render_template('home.html')
 
 # Retorna as ultimas 10 medidas
 @app.route("/measures")
 def measures():
     last10 = database.get_last_qntd(10)
-    return jsonify(last10)
+    interval = database.get_last_interval()
+    return jsonify({'interval': interval, 'measures': last10})
 
 # Recebe o intervalo de tempo via POST
 @app.route("/interval/<interval>", methods=['GET', 'POST'])
 def interval(interval):
-    response = publisher.send("g02pb3EGK {'I':" + str(interval) + "}")
+    response = pub.send("g02pb3EGK {'interval':" + str(interval) + "}")
+    # response = publish("g02pb3EGK {'interval':" + str(interval) + "}")
     return jsonify(str(response))
+
+# def publish(data):
+#     mqtt_server = mqtt.Client("G02_THEBESTGROUP_PUB")
+#     mqtt_server.username_pw_set("aluno", "aluno*123")
+#     mqtt_server.on_publish = on_publish
+#     mqtt_server.connect("10.0.0.101", 1883)
+    
+#     topic = 'G02_THEBESTGROUP/INTERVALO'
+    
+#     return  mqtt_server.publish(topic, data)
+
+	
+# # Quando houver uma publicação
+# def on_publish(client, userdata, result):
+#     print('Data published: {}'.format(result))
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0")

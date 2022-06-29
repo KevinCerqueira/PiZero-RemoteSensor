@@ -22,6 +22,12 @@ RUN ln -sf /dev/stdout /var/log/apache2/access.log && \
     ln -sf /dev/stderr /var/log/apache2/error.log
 RUN mkdir -p $APACHE_RUN_DIR $APACHE_LOCK_DIR $APACHE_LOG_DIR
 
+# ADD ./src/web /var/www/html
+
+# RUN chmod 775 -R /var/www/html/vendor/*
+
+# RUN chown -R www-data:www-data /var/www/html/vendor/*
+
 VOLUME [ "/var/www/html" ]
 WORKDIR /var/www/html
 

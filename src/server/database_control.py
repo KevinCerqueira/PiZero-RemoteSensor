@@ -40,7 +40,7 @@ class DatabaseControl:
 		# Atribuindo um novo ID para o paciente
 		new_id = int(self.get_last_id(self.db_measure_path)) + 1
 		# time_measure = str(datetime.now())
-		new_data = {'id': new_id, 'uuid': str(uuid.uuid4()), 'H': data['H'], 'T': data['T'], 'P': data['P'], 'L': data['T'], 'datetime': data['datetime']}
+		new_data = {'id': new_id, 'uuid': str(uuid.uuid4()), 'H': data['H'], 'T': data['T'], 'P': data['P'], 'L': data['T'], 'datetime': data['datetime'], 'interval': data['interval']}
 		
 		# Pega todas as medicoes e adiciona a nova no final delas
 		current_data = self.get_all(self.db_measure_path)
@@ -62,7 +62,10 @@ class DatabaseControl:
 	def get_all(self, db_file):
 		with open(self.directory + db_file, 'r', encoding='utf-8') as db_read:
 			# print(json.load(db_read))
-			return json.load(db_read)
+			try:
+				return json.load(db_read)
+			except:
+				return None
 		return None
 	
 	# Retornar um dado caso exista de um determinado arquivo, caso não retorna vazio.
@@ -77,6 +80,8 @@ class DatabaseControl:
 	# Retorna as 10 últimas medições
 	def get_last_qntd(self, count):
 		measures = self.get_all(self.db_measure_path)
+		if(measures == None):
+			return None
 		qntd = len(measures)
 		if(qntd <= count):
 			return measures
@@ -84,6 +89,12 @@ class DatabaseControl:
 		for measure in list(measures)[-count:]:
 			last_10.append(measures[measure])
 		return last_10
+		
+	def get_last_interval(self):
+		measures = self.get_all(self.db_measure_path)
+		if(measures == None):
+			return None
+		return measures[str(len(measures) - 1)]['interval']
 	
 	# Retorna todos os pacientes de um determinado medico
 	def get_all_measures(self):
@@ -106,5 +117,5 @@ class DatabaseControl:
 		
 if __name__ == '__main__':
 	c = DatabaseControl()
-	# c.insert_measure({"H": "100", "T": "100", "P": "100", "L": "100"})
-	print(c.get_last_qntd(10))
+	c.insert_measure({"H": "100", "T": "100", "P": "100", "L": "100", 'datetime': '2022-09-09 12:12:12', 'interval': 2})
+	print(c.get_last_interval())

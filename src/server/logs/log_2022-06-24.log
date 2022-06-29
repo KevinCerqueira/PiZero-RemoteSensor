@@ -1,0 +1,9 @@
+[2022-06-24 21:05:55.478159][SUB] SERVER READY
+[2022-06-24 21:05:55.894335][SUB] Connected to a broker!
+[2022-06-24 21:06:43.195821][SUB] SERVER READY
+[2022-06-24 21:06:43.501530][SUB] Connected to a broker!
+[2022-06-24 21:07:35.978637][SUB] SERVER READY
+[2022-06-24 21:07:36.280306][SUB] Connected to a broker!
+[2022-06-24 21:07:36.585186][SUB] [FROM broker.emqx.io:1883]: raspberry {"H": "12312", "T": "100", "P": "100", "L": "100"}
+[2022-06-24 21:07:36.585386][SUB] Conexão externa.
+[2022-06-24 21:07:47.612484][SUB] [FROM broker.emqx.io:1883]: g02pb3EGK {"H": "3333", "T": "100", "P": "100", "L": "100"}

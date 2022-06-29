@@ -15,8 +15,20 @@ services:
   #     context: .
   #     dockerfile: Dockerfile-api
   #   ports:
-  #   - "5000:5000"
+  #   - "5000:5100"
+  #   # - "1883:1883"
+  #   env_file: ./src/server/.env
+  #   restart: unless-stopped
+  #   expose:
+  #     - 1883
+        
   # mqtt:
   #   build: 
   #     context: .
   #     dockerfile: Dockerfile-mqtt
+  #   network_mode: bridge
+  #   expose:
+  #     - 1883
+  #   ports:
+  #   - 1883:1883
+  #   restart: unless-stopped

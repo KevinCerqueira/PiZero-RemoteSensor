@@ -16,6 +16,13 @@
 	<!-- jquery 3.6.0 -->
 	<script src="vendor/jquery/jquery-3.6.0.min.js"></script>
 
+	<!-- FontAwesome Icons -->
+	<link rel="stylesheet" href="vendor/font-awesome-4.7.0/css/font-awesome.min.css">
+
+	<!-- SweetAlert2 -->
+	<script src="vendor/sa2/sa2.js"></script>
+
+
 	<title>Monitoramento</title>
 </head>
 
@@ -25,10 +32,27 @@
 		<div class="list-group">
 			<a class="list-group-item list-group-item-action active" aria-current="true">
 				<div class="text-center">
-					<h5 class="mb-1">Lista das 10 últimas medições</h5>
-					<small class="text-white">Refresh: #</i><span id="count">0</span></small>
-					<div hidden id="alert-error" class="alert alert-danger mt-3" role="alert">
-						<p id="alert-text-error" class="h5 m-0"></p>
+					<div class="text-center">
+						<h5 class="mb-1">Lista das 10 últimas medições</h5>
+						<small class="row">
+							<div class="col-md-6">
+								<label class="badge bg-white text-dark ">
+									Refresh: #</i><span id="count">0</span>
+								</label>
+							</div>
+							<div class="col-md-6">
+								<button type="button" class="badge bg-white text-dark btn btn-light" data-bs-toggle="modal" data-bs-target="#modaledit">
+									<label class="">Intervalo: <span id="interval"></span>s
+										<em class="fa fa-pencil" style="font-size: 12px; color: #000" aria-hidden="true"></em></label>
+								</button>
+							</div>
+						</small>
+						<div hidden id="alert-error" class="alert alert-danger mt-3" role="alert">
+							<p id="alert-text-error" class="h5 m-0"></p>
+						</div>
+						<div hidden id="alert-info" class="alert alert-info mt-3" role="alert">
+							<p id="alert-text-info" class="h5 m-0"></p>
+						</div>
 					</div>
 				</div>
 			</a>
@@ -63,49 +87,118 @@
 			</div>
 		</div>
 	</div>
-
+	<!-- Modal -->
+	<div class="modal fade" id="modaledit" tabindex="-1" aria-labelledby="modaleditLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<form id="form-interval">
+					<div class="modal-header">
+						<h5 class="modal-title" id="modaleditLabel">Editar intervalo de tempo</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body p-lg-5">
+						<div class="input-group input-group-lg">
+							<input name="interval" type="number" class="form-control text-center" aria-label="" aria-describedby="inputGroup-sizing-lg">
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+						<button type="submit" class="btn btn-primary">Alterar</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 	<script>
 		$(function(event) {
-					setInterval(requestData, 1000);
-					async function requestData() {
-						await $.ajax({
-							type: "GET",
-							url: "controllers/measures.php",
-							dataType: "html",
-							beforeSend: function() {
-								$('#alert-error').attr('hidden', '');
-								$('#alert-text-error').text('');
 
-								if ($('#count').text() == '0') {
-									$('#loading').removeAttr('hidden');
-								}
-							},
-							success: function(data) {
-								response = JSON.parse(data);
-								if (response.success) {
-									$('.lists').empty();
+			$("#form-interval").submit((e) => {
+				e.preventDefault();
+				$.ajax({
+					type: "POST",
+					url: "controllers/interval.php",
+					dataType: "json",
+					data: $('#form-interval').serialize(),
+					beforeSend: function() {
+						$('#alert-error').attr('hidden', '');
+						$('#alert-text-error').text('');
+					},
+					success: function(response) {
+						// response = JSON.parse(data);
+						if (response.success) {
+							Swal.fire({
+								icon: 'success',
+								title: 'Sucesso!',
+								text: 'Intervalo de tempo enviado: ' + response.data,
+							})
+						} else {
+							Swal.fire({
+								icon: 'error',
+								title: 'Erro ao enviar intervalo!',
+								text: response.error,
+							});
+						}
 
-									$(".lists").append(response.data);
-
-									$('#count').text(parseInt($('#count').text()) + 1);
-								} else {
-									$('#alert-error').removeAttr('hidden');
-									$('#alert-text-error').text('Não foi possível carregar a lista: ' + response.error);
-								}
-
-							},
-							error: function(data) {
-								console.log(data);
-								$('#alert-error').removeAttr('hidden');
-								$('#alert-text-error').text('Parece que estamos offline. Chame o TI!');
-							},
-							complete: function() {
-								$('#priorities').removeAttr('hidden');
-								$('#loading').attr('hidden', '');
-							}
+					},
+					error: function(data) {
+						console.log(data);
+						Swal.fire({
+							icon: 'error',
+							title: 'Erro!',
+							text: 'Parece que estamos offline. Chame o TI!',
 						});
 					}
 				});
+			});
+
+			setInterval(requestData, 1000);
+			
+			async function requestData() {
+				await $.ajax({
+					type: "GET",
+					url: "controllers/measures.php",
+					dataType: "html",
+					beforeSend: function() {
+						$('#alert-error').attr('hidden', '');
+						$('#alert-text-error').text('');
+						$('#alert-info').attr('hidden', '');
+						$('#alert-text-info').text('');
+
+						if ($('#count').text() == '0') {
+							$('#loading').removeAttr('hidden');
+						}
+					},
+					success: function(data) {
+						response = JSON.parse(data);
+						if (response.success) {
+							$('.lists').empty();
+							
+							if(response.data.measures == ""){
+								$('#alert-info').removeAttr('hidden');
+								$('#alert-text-info').text('Não há dados para carregar.');	
+							}else{
+								$(".lists").append(response.data.measures);
+								$("#interval").text(response.data.interval);
+							}
+							$('#count').text(parseInt($('#count').text()) + 1);
+						} else {
+							$('#alert-error').removeAttr('hidden');
+							$('#alert-text-error').text('Não foi possível carregar a lista: ' + response.error);
+						}
+
+					},
+					error: function(data) {
+						console.log(data);
+						$('#alert-error').removeAttr('hidden');
+						$('#alert-text-error').text('Parece que estamos offline. Chame o TI!');
+					},
+					complete: function() {
+						$('#priorities').removeAttr('hidden');
+						$('#loading').attr('hidden', '');
+					}
+				});
+			}
+		});
 	</script>
 
 </body>
