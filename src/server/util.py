@@ -1,6 +1,6 @@
 """
  * Componente Curricular: MI Concorrência e Conectividade
- * Autor: 
+ * Autor: Esdras Abreu, Guilherme Nobre e Kevin Cerqueira
  *
  * Declaro que este código foi elaborado por mim de forma individual e
  * não contém nenhum trecho de código de outro colega ou de outro autor,
@@ -12,22 +12,16 @@
  * colegas pois estes foram discutidos em sessões tutorias.
 """
 import os
-from dotenv import load_dotenv
 import platform
 from datetime import datetime
 from datetime import date
-import socket
+
+path_log = '/logs/log_'
+if(platform.system() != 'Linux'):
+	path_log = '\\logs\\log_'
 
 # Grava mensagens no LOG do sistema (arquivo logs/log_ANO-MES-DIA.log)
 def log(origin, msg):
-	with open(os.path.dirname(os.path.realpath(__file__)) + '/logs/log_' + str(date.today()) + '.log', 'a', encoding='utf-8') as log_file:
+	with open(os.path.dirname(os.path.realpath(__file__)) + path_log + str(date.today()) + '.log', 'a', encoding='utf-8') as log_file:
 		log_file.write("[" + str(datetime.now()) + "][" + origin + "] " + msg + '\n')
 	return True
-	
-# hostname=socket.gethostname()
-# IPAddr=socket.gethostbyname(hostname)
-# print(socket.gethostbyname(IPAddr))
-# print(env('MQTT_PERSONAL_KEY'))
-# key = "BROKER_PORT"
-# print(os.getenv(key, default=None))
-# log('oi', 'as')

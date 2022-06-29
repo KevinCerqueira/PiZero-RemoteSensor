@@ -1,6 +1,6 @@
 """
  * Componente Curricular: MI Concorrência e Conectividade
- * Autor: 
+ * Autor: Esdras Abreu, Guilherme Nobre e Kevin Cerqueira
  *
  * Declaro que este código foi elaborado por mim de forma individual e
  * não contém nenhum trecho de código de outro colega ou de outro autor,

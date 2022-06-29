@@ -1,5 +1,17 @@
 <?php
-
+/**
+ * Componente Curricular: MI Concorrência e Conectividade
+ * Autor: Esdras Abreu, Guilherme Nobre e Kevin Cerqueira
+ *
+ * Declaro que este código foi elaborado por mim de forma individual e
+ * não contém nenhum trecho de código de outro colega ou de outro autor,
+ * tais como provindos de livros e apostilas, e páginas ou documentos
+ * eletrônicos da Internet. Qualquer trecho de código de outra autoria que
+ * uma citação para o  não a minha está destacado com  autor e a fonte do
+ * código, e estou ciente que estes trechos não serão considerados para fins
+ * de avaliação. Alguns trechos do código podem coincidir com de outros
+ * colegas pois estes foram discutidos em sessões tutorias.
+ */
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -96,9 +108,12 @@
 						<h5 class="modal-title" id="modaleditLabel">Editar intervalo de tempo</h5>
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
+					<div hidden id="alert-error-modal" class="alert alert-danger m-0 text-center" role="alert">
+						<p id="alert-text-error-modal" class="h5 m-0"></p>
+					</div>
 					<div class="modal-body p-lg-5">
 						<div class="input-group input-group-lg">
-							<input name="interval" type="number" class="form-control text-center" aria-label="" aria-describedby="inputGroup-sizing-lg">
+							<input id="interval-input" name="interval" type="number" class="form-control text-center" aria-label="" aria-describedby="inputGroup-sizing-lg">
 						</div>
 					</div>
 					<div class="modal-footer">
@@ -114,6 +129,20 @@
 
 			$("#form-interval").submit((e) => {
 				e.preventDefault();
+
+				$('#alert-error-modal').attr('hidden', '');
+				$('#alert-text-error-modal').text('');
+
+				if ($("#interval-input").val() === "") {
+					$('#alert-error-modal').removeAttr('hidden');
+					$('#alert-text-error-modal').text("Por favor informe um intervalo.");
+					return
+				} else if ($("#interval-input").val() < 2) {
+					$('#alert-error-modal').removeAttr('hidden');
+					$('#alert-text-error-modal').text("O intervalo deve ser ao menos 2 segundos.");
+					return
+				}
+
 				$.ajax({
 					type: "POST",
 					url: "controllers/interval.php",
@@ -124,13 +153,13 @@
 						$('#alert-text-error').text('');
 					},
 					success: function(response) {
-						// response = JSON.parse(data);
 						if (response.success) {
 							Swal.fire({
 								icon: 'success',
 								title: 'Sucesso!',
 								text: 'Intervalo de tempo enviado: ' + response.data,
-							})
+							});
+							$("#modaledit").modal('hide');
 						} else {
 							Swal.fire({
 								icon: 'error',
@@ -152,7 +181,7 @@
 			});
 
 			setInterval(requestData, 1000);
-			
+
 			async function requestData() {
 				await $.ajax({
 					type: "GET",
@@ -172,11 +201,12 @@
 						response = JSON.parse(data);
 						if (response.success) {
 							$('.lists').empty();
-							
-							if(response.data.measures == ""){
+
+							if (response.data.measures == "") {
 								$('#alert-info').removeAttr('hidden');
-								$('#alert-text-info').text('Não há dados para carregar.');	
-							}else{
+								$('#alert-text-info').text('Não há dados para carregar.');
+								$("#interval").text('0');
+							} else {
 								$(".lists").append(response.data.measures);
 								$("#interval").text(response.data.interval);
 							}

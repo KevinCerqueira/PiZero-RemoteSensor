@@ -1,5 +1,19 @@
 <?php
 
+/**
+ * Componente Curricular: MI Concorrência e Conectividade
+ * Autor: Esdras Abreu, Guilherme Nobre e Kevin Cerqueira
+ *
+ * Declaro que este código foi elaborado por mim de forma individual e
+ * não contém nenhum trecho de código de outro colega ou de outro autor,
+ * tais como provindos de livros e apostilas, e páginas ou documentos
+ * eletrônicos da Internet. Qualquer trecho de código de outra autoria que
+ * uma citação para o  não a minha está destacado com  autor e a fonte do
+ * código, e estou ciente que estes trechos não serão considerados para fins
+ * de avaliação. Alguns trechos do código podem coincidir com de outros
+ * colegas pois estes foram discutidos em sessões tutorias.
+ */
+
 class Controller
 {
 	private $api;
@@ -8,9 +22,9 @@ class Controller
 	{
 		// $this->setApi(true);
 		// $this->api = "http://127.0.0.1:5000";
-		$this->api = "http://".$_SERVER['REMOTE_ADDR'].":5000";
+		$this->api = "http://" . $_SERVER['REMOTE_ADDR'] . ":5000";
 	}
-	
+
 	// public function setApi(bool $sum, string $addr = null)
 	// {
 	// 	if(!$addr){
@@ -31,7 +45,7 @@ class Controller
 		// }
 		return $response;
 	}
-	
+
 	public function sendInterval(int $interval): array
 	{
 		$response = $this->api('POST', "/interval/$interval");
@@ -64,7 +78,7 @@ class Controller
 			$response = curl_exec($curl);
 			curl_close($curl);
 			// var_dump($_SERVER['REMOTE_ADDR'], getHostByName(getHostName()));
-// var_dump($response);die();
+			// var_dump($response);die();
 			// $response = json_decode($response);
 			if (empty($response) || !$response) {
 				return ['success' => false, 'error' => 'API não está respondendo.', 'trace' => 'URL ' . $url];

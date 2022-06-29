@@ -1,6 +1,6 @@
 """
  * Componente Curricular: MI Concorrência e Conectividade
- * Autor: 
+ * Autor: Esdras Abreu, Guilherme Nobre e Kevin Cerqueira
  *
  * Declaro que este código foi elaborado por mim de forma individual e
  * não contém nenhum trecho de código de outro colega ou de outro autor,
@@ -40,23 +40,7 @@ def measures():
 @app.route("/interval/<interval>", methods=['GET', 'POST'])
 def interval(interval):
     response = pub.send("g02pb3EGK {'interval':" + str(interval) + "}")
-    # response = publish("g02pb3EGK {'interval':" + str(interval) + "}")
     return jsonify(str(response))
-
-# def publish(data):
-#     mqtt_server = mqtt.Client("G02_THEBESTGROUP_PUB")
-#     mqtt_server.username_pw_set("aluno", "aluno*123")
-#     mqtt_server.on_publish = on_publish
-#     mqtt_server.connect("10.0.0.101", 1883)
-    
-#     topic = 'G02_THEBESTGROUP/INTERVALO'
-    
-#     return  mqtt_server.publish(topic, data)
-
-	
-# # Quando houver uma publicação
-# def on_publish(client, userdata, result):
-#     print('Data published: {}'.format(result))
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0")

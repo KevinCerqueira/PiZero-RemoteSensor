@@ -39,7 +39,6 @@ class DatabaseControl:
 		
 		# Atribuindo um novo ID para o paciente
 		new_id = int(self.get_last_id(self.db_measure_path)) + 1
-		# time_measure = str(datetime.now())
 		new_data = {'id': new_id, 'uuid': str(uuid.uuid4()), 'H': data['H'], 'T': data['T'], 'P': data['P'], 'L': data['T'], 'datetime': data['datetime'], 'interval': data['interval']}
 		
 		# Pega todas as medicoes e adiciona a nova no final delas
@@ -53,28 +52,36 @@ class DatabaseControl:
 	def get_last_id(self, db_file):
 		last_id = -1 # Retorna -1 caso não tenha nada.
 		with open(self.directory + db_file, 'r', encoding='utf-8') as db_read:
-			data = json.load(db_read)
-			for id in data:
-				last_id = id
+			try:
+				data = json.load(db_read)
+				for id in data:
+					last_id = id
+			except Exception as e:
+				print(e)
+				return None
+			
 		return last_id
 	
 	# Retornar todos os dados de um determinado arquivo.
 	def get_all(self, db_file):
 		with open(self.directory + db_file, 'r', encoding='utf-8') as db_read:
-			# print(json.load(db_read))
 			try:
 				return json.load(db_read)
-			except:
+			except Exception as e:
+				print(e)
 				return None
-		return None
 	
 	# Retornar um dado caso exista de um determinado arquivo, caso não retorna vazio.
 	def get(self, db_file, id):
 		with open(self.directory + db_file, 'r', encoding='utf-8') as db_read:
-			data_read = json.load(db_read)
-			for index in data_read:
-				if(str(index) == str(id)):
-					return data_read[str(id)]
+			try:
+				data_read = json.load(db_read)
+				for index in data_read:
+					if(str(index) == str(id)):
+						return data_read[str(id)]
+			except Exception as e:
+				print(e)
+				return None
 		return None
 	
 	# Retorna as 10 últimas medições
@@ -108,11 +115,15 @@ class DatabaseControl:
 	def delete_measure(self, id_measure):
 		path = self.directory + self.db_measure_path
 		with open(path, 'r', encoding='utf-8') as db_read:
-			data_read = json.load(db_read)
-			data_read.pop(str(id_measure))
-			with open(path, 'w', encoding='utf-8') as db_write:
-				json.dump(data_read, db_write, ensure_ascii=False, indent=4)
-			return True
+			try:
+				data_read = json.load(db_read)
+				data_read.pop(str(id_measure))
+				with open(path, 'w', encoding='utf-8') as db_write:
+					json.dump(data_read, db_write, ensure_ascii=False, indent=4)
+				return True
+			except Exception as e:
+				print(e)
+				return None
 		return False
 		
 if __name__ == '__main__':
