@@ -21,8 +21,8 @@ class Controller
 	public function __construct()
 	{
 		// $this->setApi(true);
-		// $this->api = "http://127.0.0.1:5000";
-		$this->api = "http://" . $_SERVER['REMOTE_ADDR'] . ":5000";
+		$this->api = "http://10.0.0.109:5000";
+		// $this->api = "http://" . $_SERVER['REMOTE_ADDR'] . ":5000";
 	}
 
 	// public function setApi(bool $sum, string $addr = null)

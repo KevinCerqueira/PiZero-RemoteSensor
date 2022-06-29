@@ -15,7 +15,6 @@
 import os
 import json
 import uuid
-from datetime import datetime
 import platform
 
 # Classe para controlar a base de dados.
@@ -92,10 +91,10 @@ class DatabaseControl:
 		qntd = len(measures)
 		if(qntd <= count):
 			return measures
-		last_10 = []
+		lasts = []
 		for measure in list(measures)[-count:]:
-			last_10.append(measures[measure])
-		return last_10
+			lasts.insert(0, measures[measure])
+		return lasts
 		
 	def get_last_interval(self):
 		measures = self.get_all(self.db_measure_path)
