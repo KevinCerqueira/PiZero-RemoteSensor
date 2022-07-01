@@ -3,6 +3,10 @@
 <p>Projeto que captura medidas de um sensor DHT11 e dois potenciômetros em uma Raspberry Pi Zero, mostrando medidas num display LCD. As medidas também são enviadas para um servidor python para serem exibidas em uma view remota, implementando o protocolo de comunicação MQTT. Usuários na view podem alterar a frequência na qual as medições são feitas.
 </p>
 
+## Pré-requisitos na Raspberry Pi
+
+O programa precisa das bibliotecas mosquitto, wiringPi, e i2c-dev.
+
 ## Instalação na Raspberry Pi
 
 <ol>
@@ -12,7 +16,7 @@
   <li>Execute o código.</li>
 </ol>
 
-## Utilizando a IHM da Raspberry
+## Utilizando a IHM da Raspberry Pi
 
 Foram utilizados 2 push buttons e uma dip switch como fontes de entrada nesse projeto. O interruptor 3 da dip switch muda as medidas que são mostradas no LCD entre medidas de Temperatura/Humidade e Luminosidade/Pressão. O interruptor 4 troca o modo de mostragem da IHM para mostrar o intervalo de medida atual, ou mostrar as medidas.
 
