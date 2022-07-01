@@ -7,7 +7,7 @@
 
 <ol>
   <li>Baixe o projeto.</li>
-  <li>Transfira os seguintes arquivos da pasta "src/raspberry" para uma Raspberry Pi Zero: "both_v5.c", "constants.h", "read_voltage.c". Certifique-se que todos os arquivos estão na mesma pasta.</li>
+  <li>Transfira os seguintes arquivos da pasta "src/raspberry" para uma Raspberry Pi Zero: "main_final.c", "constants.h", "read_voltage.c". Certifique-se que todos os arquivos estão na mesma pasta.</li>
   
 </ol>
 
