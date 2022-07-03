@@ -2,24 +2,59 @@
 
 Projeto que captura medidas de um sensor DHT11 e dois potenciômetros em uma Raspberry Pi Zero, mostrando medidas num display LCD. As medidas também são enviadas para um servidor python, implementando o protocolo de comunicação MQTT, para serem exibidas em uma view remota. Usuários na view podem alterar a frequência na qual as medições são feitas, assim como também podem alterar a mesma frequência nos próprios butões/dipswitch da Raspberry.
 ## Sumário
-1. [Sobre MQTT](#sobre-mqtt)
-2. [Diagrama do Sistema](#diagrama-do-sistema)
-  2.1 [Parte Raspberry](#parte-raspberry)
-  2.2 [Parte Broker](#parte-broker)
-  2.3 [Parte Remota](#parte-remota)
-    2.3.1 [Subscriber](#subscriber)
-    2.3.2 [Banco de Dados](#banco-de-dados)
-    2.3.3 [Servidor](#servidor)
-    2.3.4 [Back-End (View)](#back-end-view)
-    2.3.5 [Front-End (View)](#front-end-view)
-3. [Pré-requisitos](#pré-requisitos)
-  3.1 [Na Raspberry PI Zero](#na-raspberry-pi)
-    3.1.1 [Utilizando a IHM da Raspberry Pi](#utilizando-a-ihm-da-raspberry-pi)
-  3.2 [No Remoto](#no-remoto)
-4. [Startando o projeto](#startando-o-projeto)
-  3.1 [Parte Raspberry](#parte-raspberry)
-  3.2 [Parte Remota](#parte-remota-1)
-5. [Principais telas do sistema](#principais-telas-do-sistema)
+<ol>
+  <li>[Sobre MQTT](#sobre-mqtt)</li>
+  <li>[Diagrama do Sistema](#diagrama-do-sistema)
+    <ol>
+      <li>[Parte Raspberry](#parte-raspberry)</li>
+      <li>[Parte Broker](#parte-broker)</li>
+      <li>[Parte Remota](#parte-remota)</li>
+      <ol>
+        <li>
+          [Subscriber](#subscriber)
+        </li>
+        <li>
+          [Banco de Dados](#banco-de-dados)
+        </li>
+        <li>
+          [Servidor](#servidor)
+        </li>
+        <li>
+          [Back-End (View)](#back-end-view)
+        </li>
+        <li>
+          [Front-End (View)](#front-end-view)
+        </li>
+      </ol>
+    </ol>
+  </li>
+  <li>[Pré-requisitos](#pré-requisitos)
+  <ol>
+  <li>
+    [Na Raspberry PI Zero](#na-raspberry-pi)
+    <ol>
+      <li>[Utilizando a IHM da Raspberry Pi](#utilizando-a-ihm-da-raspberry-pi)</li>
+    </ol>
+  </li>
+  <li>
+    [No Remoto](#no-remoto)
+  </li>
+  </ol>
+  </li>
+  <li> [Startando o projeto](#startando-o-projeto)
+  <ol>
+  <li>
+  [Parte Raspberry](#parte-raspberry)
+  </li>
+  <li>
+  [Parte Remota](#parte-remota-1)
+  </li>
+  </ol>
+  </li>
+  <li>
+    [Principais telas do sistema](#principais-telas-do-sistema)
+  </li>
+</ol>
 ## Sobre MQTT
 
 ## Diagrama do sistema
