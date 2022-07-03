@@ -2,6 +2,7 @@
 
 Projeto que captura medidas de um sensor DHT11 e dois potenciômetros em uma Raspberry Pi Zero, mostrando medidas num display LCD. As medidas também são enviadas para um servidor python, implementando o protocolo de comunicação MQTT, para serem exibidas em uma view remota. Usuários na view podem alterar a frequência na qual as medições são feitas, assim como também podem alterar a mesma frequência nos próprios butões/dipswitch da Raspberry.
 ## Sumário
+- [Requisitos](#requisitos)
 - [Sobre MQTT](#sobre-mqtt)
 - [Diagrama do Sistema](#diagrama-do-sistema)
   - [Parte Raspberry](#parte-raspberry)
@@ -20,6 +21,15 @@ Projeto que captura medidas de um sensor DHT11 e dois potenciômetros em uma Ras
   - [Parte Raspberry](#parte-raspberry)
   - [Parte Remota](#parte-remota-1)
 - [Principais telas do sistema](#principais-telas-do-sistema)
+
+## Requisitos
+- Códigos e protocolos:
+  - Código deverá ser escrito em linguagem C; :white_check_mark: 
+  - Usar protocolo MQTT. :white_check_mark: 
+- O sistema deverá possuir uma IHM local com interface baseada em display LCD, botões e chaves; :white_check_mark: 
+- O sistema deverá implementar uma interface em forma de aplicativo para Desktop ou Smartphone. Esta interface deve ser capaz de apresentar as medições coletadas e as configurações para funcionamento da estação de medição; :white_check_mark: 
+- O sistema deve apresentar informações sobre a conexão com a estação de
+medição na IHM local e remotamente. :white_check_mark: 
 
 ## Sobre MQTT
 
