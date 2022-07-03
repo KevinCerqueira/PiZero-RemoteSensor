@@ -12,7 +12,7 @@
  * de avaliação. Alguns trechos do código podem coincidir com de outros
  * colegas pois estes foram discutidos em sessões tutorias.
  */
-
+// Trata o intervalo enviado pela view para requisitar para a API
 include_once('Controller.php');
 
 $controller = new Controller();

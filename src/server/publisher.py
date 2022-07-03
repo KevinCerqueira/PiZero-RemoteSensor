@@ -51,7 +51,7 @@ class Publisher:
 		self.mqtt_server.username_pw_set("aluno", "aluno*123")
 		self.mqtt_server.on_publish = self.on_publish
 		# self.mqtt_server.connect(self.HOST, self.PORT)
-		# self.mqtt_server.connect("broker.emqx.io", 1883)
+		self.mqtt_server.connect("broker.emqx.io", 1883)
 		
 		
 		# self.topic = os.getenv('TOPICO_INTERVALO')

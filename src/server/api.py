@@ -17,7 +17,6 @@ from flask import jsonify
 from flask import request
 from database_control import DatabaseControl
 from publisher import Publisher
-import paho.mqtt.client as mqtt
 
 
 database = DatabaseControl()

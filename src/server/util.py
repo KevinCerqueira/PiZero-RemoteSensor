@@ -16,6 +16,9 @@ import platform
 from datetime import datetime
 from datetime import date
 
+# Arquivo para gravar o log nos arquivos
+
+# Verificação se a plataforma é Linux ou outro
 path_log = '/logs/log_'
 if(platform.system() != 'Linux'):
 	path_log = '\\logs\\log_'

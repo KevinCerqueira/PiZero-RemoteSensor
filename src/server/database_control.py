@@ -95,7 +95,8 @@ class DatabaseControl:
 		for measure in list(measures)[-count:]:
 			lasts.insert(0, measures[measure])
 		return lasts
-		
+	
+	# Retorna o intervalo da última medição 
 	def get_last_interval(self):
 		measures = self.get_all(self.db_measure_path)
 		if(measures == None):

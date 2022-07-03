@@ -16,15 +16,12 @@ import json
 import sys
 import os
 import threading
-import base64
-import re
 import util
 from collections import deque
 from database_control import DatabaseControl
-from datetime import datetime
-from datetime import date
 from dotenv import load_dotenv
 
+# Classe responsável por ser o Subscriber do MQTT
 class Subscriber:
 	
 	HOST = ''
@@ -36,13 +33,17 @@ class Subscriber:
 	# Controlador da base de dados
 	database = None
 	
+	# Variáveis da Thread
 	queue_request = None
 	thread_request = None
 	
+	# Caso receba uma requisição com o nome 'close' o servidor fecha
 	close = False
 	
+	# Códigos de retorno do MQTT
 	return_codes = ["Connection successful", "Connection refused – incorrect protocol version", "Connection refused – invalid client identifier", "Connection refused – server unavailable", "Connection refused – bad username or password", "Connection refused – not authorised"]
 	
+	# Construtor
 	def __init__(self):
 		
 		# Iniciando o Server
@@ -53,13 +54,13 @@ class Subscriber:
 
 		self.mqtt_server = mqtt.Client(os.getenv('CLIENTID_SUB'))
 		self.mqtt_server.username_pw_set(os.getenv('BROKER_USER'), os.getenv('BROKER_PASS'))
-		# self.mqtt_server.connect(self.HOST, self.PORT)
-		# self.mqtt_server.connect("broker.emqx.io", 1883)
-		self.mqtt_server.connect("10.0.0.101", 1883)
+		self.mqtt_server.connect("10.0.0.101", 1883) # Broker do LEDs
+		# self.mqtt_server.connect("broker.emqx.io", 1883) # Broker online
 		
 		
 		self.topic = os.getenv('TOPICO_MEDICOES')
 		
+		# Iniciando a Thread
 		self.queue_request = deque()
 		self.thread_request = threading.Thread(target=self.queue)
 		self.thread_request.start()
@@ -70,6 +71,7 @@ class Subscriber:
 		
 		self.work()
 	
+	# Função do MQTT quando conectado
 	def on_connect(self, client, userdata, flags, rc):
 		if(rc == 0):
 			self.mqtt_server.subscribe(self.topic)
@@ -80,15 +82,17 @@ class Subscriber:
 			else:
 				self.log("Bad Connection! Returned undefined code: " + str(rc))
 				
-		
+	# Função do MQTT para quando desconectado
 	def on_disconnect(self, client, userdata, flags):
 		self.mqtt_server.subscribe(self.topic)
 		self.log("Disconnected to a broker!")
 
+	# Função do MQTT para quando receber uma mensagem
 	def on_message(self, client, userdata, message):
 		self.log("[FROM "+self.HOST+":"+str(self.PORT)+"]: " + str(message.payload.decode()))
 		self.receptor(message.payload.decode())
-		
+	
+	# Registro de LOG
 	def log(self, msg):
 		util.log('SUB', msg)
 

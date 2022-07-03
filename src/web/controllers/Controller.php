@@ -14,48 +14,36 @@
  * colegas pois estes foram discutidos em sessões tutorias.
  */
 
+// Classe responsável por gerenciar as requisições a API
 class Controller
 {
 	private $api;
 
 	public function __construct()
 	{
-		// $this->setApi(true);
-		$this->api = "http://10.0.0.109:5000";
-		// $this->api = "http://" . $_SERVER['REMOTE_ADDR'] . ":5000";
+		// $this->api = "http://10.0.0.109:5000"; // Caso queira acessar de outros dispositivos da rede, será necessário colocar o IP atual do computador
+		$this->api = "http://" . $_SERVER['REMOTE_ADDR'] . ":5000";
 	}
 
-	// public function setApi(bool $sum, string $addr = null)
-	// {
-	// 	if(!$addr){
-	// 		return $this->api = "http://".$_SERVER['REMOTE_ADDR'].":5000";
-	// 	}
-	// 	$php_docker_ip = getHostByName(getHostName());
-	// 	$last_num = substr($php_docker_ip, -1);
-	// 	$addr =  substr($php_docker_ip,  0, strlen($php_docker_ip) - 1) . strval($sum ? ++$last_num : --$last_num);
-	// 	return $this->api = "http://".$addr.":5000";
-	// }
-
+	/**
+	* Requisita a rota das 10 últimas medições
+	*/
 	public function getLast10Measures(): array
 	{
-		$response =  $this->api('GET', '/measures');
-		// if(!$response['success']){
-		// 	$this->setApi(false);
-		// 	return $this->api('GET', '/measures');
-		// }
-		return $response;
+		return $this->api('GET', '/measures');
 	}
 
+	/**
+	* Envia o intervalo.
+	*/
 	public function sendInterval(int $interval): array
 	{
-		$response = $this->api('POST', "/interval/$interval");
-		// if(!$response['success']){
-		// 	$this->setApi(false);
-		// 	return $this->api('POST', "/interval/$interval");
-		// }
-		return $response;
+		return $this->api('POST', "/interval/$interval");
 	}
-
+	
+	/**
+	* Prepara a requsição para ser feita a API
+	*/
 	function api(string $method, string $url, array $data = null): array
 	{
 		try {
@@ -77,9 +65,6 @@ class Controller
 
 			$response = curl_exec($curl);
 			curl_close($curl);
-			// var_dump($_SERVER['REMOTE_ADDR'], getHostByName(getHostName()));
-			// var_dump($response);die();
-			// $response = json_decode($response);
 			if (empty($response) || !$response) {
 				return ['success' => false, 'error' => 'API não está respondendo.', 'trace' => 'URL ' . $url];
 			}

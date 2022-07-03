@@ -12,6 +12,8 @@
  * de avaliação. Alguns trechos do código podem coincidir com de outros
  * colegas pois estes foram discutidos em sessões tutorias.
  */
+
+// Dasboard do sistema
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -157,7 +159,7 @@
 							Swal.fire({
 								icon: 'success',
 								title: 'Sucesso!',
-								text: 'Intervalo de tempo enviado: ' + response.data,
+								text: 'Intervalo de tempo enviado.',
 							});
 							$("#modaledit").modal('hide');
 						} else {
