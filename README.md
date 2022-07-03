@@ -7,7 +7,7 @@ Projeto que captura medidas de um sensor DHT11 e dois potenciômetros em uma Ras
   - [Parte Raspberry](#parte-raspberry)
   - [Parte Broker](#parte-broker)
   - [Parte Remota](#parte-remota)
-    -[Subscriber](#subscriber)
+    - [Subscriber](#subscriber)
     - [Banco de Dados](#banco-de-dados)
     - [Servidor](#servidor)
     - [Back-End (View)](#back-end-view)
