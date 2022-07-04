@@ -35,12 +35,13 @@ medição na IHM local e remotamente. :white_check_mark:
 
 ## Diagrama do sistema
 ![diagrama](/telas/diagrama.png)
+
 ### Parte Raspberry
 
 ### Parte Broker
 O Broker (intermediário) faz jus a sua tradução, é o intermedário entre os publishers (publicadores) e subscribers (inscritos) por meio de canais (ou tópicos). Utilizamos o do próprio laboratório (10.0.0.101:1883), mas é possível utilizar qualquer um que seja disponível. No nosso caso, utilizamos dois canais:
  - **Canal 1 (Medições):** Por onde comunicamos as medições, onde o publisher será o que está contido na Raspberry e o subscriber será o que está contido no servidor. Fazemos a comunicação seguindo o template abaixo:
-```json
+```sh
 key {"H": "0.0", "T": "0.0", "P": "0.0", "L": "0.0", "datetime": "YYYY-mm-dd H:i:s", "interval": "2"}
 ```
     - key: nossa chave pessoal, para sabermos que se trata de uma requisição enviada pelo nosso sistema: g02pb3EGK (Grupo02_problema3_EsdrasGuilhermeKevin);
@@ -51,10 +52,11 @@ key {"H": "0.0", "T": "0.0", "P": "0.0", "L": "0.0", "datetime": "YYYY-mm-dd H:i
     - datetime: Data e hora da medição;
     - interval: frequência do intervalo atual quando a medição foi tirada.
   - **Canal 2 (Intervalo):** Por onde comunicamos a frequência do intervalo, onde o publisher será o servidor e o subscriber será a raspberry. Seguindo o seguinte template:
-```json
+```sh
 key {"interval":2}
 ```  
     - interval: Valor do intervalo para ser alterado na raspberry.
+    
 ### Parte Remota
 #### Subscriber
 Responsável por receber todos os dados que são publicados no CANAL 1 (Medições), trata-los e armazena-los no Banco de Dados.
@@ -68,7 +70,7 @@ Responsável por configurar as requisições para as chamadas ao Servidor (src/w
 Exibe todos os dados das medições em uma lista com as 10 últimas medições e recebe via Modal as frequências dos intervalos do usuário e envia para o Back-End.
 
 # Pré-requisitos
-## Na Raspberry Pi
+## Parte Raspberry
 
 O programa precisa das bibliotecas mosquitto, wiringPi, e i2c-dev (já contidas na Raspberry PI Zero do LEDs).
 
@@ -77,7 +79,8 @@ O programa precisa das bibliotecas mosquitto, wiringPi, e i2c-dev (já contidas 
 Foram utilizados 2 push buttons e uma dip switch como fontes de entrada nesse projeto. O interruptor 3 da dip switch muda as medidas que são mostradas no LCD entre medidas de Temperatura/Humidade e Luminosidade/Pressão. O interruptor 4 troca o modo de mostragem da IHM para mostrar o intervalo de medida atual, ou mostrar as medidas.
 
 Enquanto no modo de medida, os botões podem ser utilizados para mostrar os resultados de medidas mais recentes ou antigas. No modo de intervalo, os botões incrementam ou diminuem o intervalo de medida em 1 segundo.
-## No Remoto
+
+## Parte Remota
 As instalações dos pré-requisitos diferem de sistema para sistema, então disponibilizamos os requisitos juntamente com seus respectivos sites com instruções para instalar/utilizar.
 - **Python 3**:
   - Instalação no Windows: https://python.org.br/instalacao-windows/
@@ -88,6 +91,7 @@ As instalações dos pré-requisitos diferem de sistema para sistema, então dis
     - A instalação no windowns é um pouco mais 'chata', então é sempre bom rever se está tudo OK com a instalação, principlamente se tratando do WSL2 (sempre bom revisar com algum tutorial em video!).
 - **PHP 7**
   - Utilizamos o Docker, pois é mais fácil do que instalar o próprio PHP (seja qual for o sistema) então basta ter o Docker instalado.
+
 # Startando o projeto  
 ## Parte da Raspberry
 ### Comandos para serem executados na raspberry
