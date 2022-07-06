@@ -12,7 +12,7 @@
  * colegas pois estes foram discutidos em sessões tutorias.
  */
 
-// compilar: gcc both_v4.c read_voltage.c -o both4 -lwiringPi -lwiringPiDev -lm -lpthread -lmosquitto
+// compilar: gcc main_final.c read_voltage.c -o [nome_desejado] -lwiringPi -lwiringPiDev -lm -lpthread -lmosquitto
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -77,8 +77,8 @@ struct mosquitto *mosq_sub;
 #define LCD_D7 29   // Data pin 7
 #define MAXTIMINGS 85
 
-// funções recursivas quee inserem medidas nas matrizes de medidas
-/* inserções sao feitas no inicio de cada lista de medida, "empurrando" as outras medidas para um indice maior através
+/* funções recursivas quee inserem medidas nas matrizes de medidas
+inserções sao feitas no inicio de cada lista de medida, "empurrando" as outras medidas para um indice maior através
 de outras inserções em indices maiores
 */
 
@@ -271,8 +271,7 @@ void* measure_thread(void* arg){
     return NULL;
 }
 
-// função chamada pela thread responsável por receber entradas remotas de intervalo
-de medidas
+// função chamada pela thread responsável por receber entradas remotas de intervalo de medidas
 
 void* subscriber_thread(void* arg){
 	mosquitto_loop_start(mosq_sub);	
@@ -334,6 +333,7 @@ void on_connect(struct mosquitto *mosq, void *obj, int connect) {
 }
 
 // função chamada quando o subscriber recebe uma mensagem
+// checa a integridade da mensagem e altera o delay caso esteja no padrão correto
 
 void on_message(struct mosquito *mosq, void *obj, const struct mosquitto_message *msg){
 	printf("\n\nNova mensagem com o tópico %s: %s\n\n", msg->topic, (char *) msg->payload);
