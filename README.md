@@ -32,6 +32,11 @@ Projeto que captura medidas de um sensor DHT11 e dois potenciômetros em uma Ras
 medição na IHM local e remotamente. :white_check_mark: 
 
 ## Sobre MQTT
+O padrão de troca de mensagens no MQTT é o publish/subscriber (publicador/subscritor). Neste padrão, quando um elemento da rede deseja receber uma determinada informação, ele a subscreve, fazendo uma requisição para um outro elemento da rede capaz de gerir as publicações e subscrições. 
+Na rede MQTT este elemento é conhecido como broker, o intermediário no processo de comunicação. Elementos que desejam publicar informações o fazem também através do broker, enviando-lhe as informações que possuem.
+Apesar de o broker representar um elo de fragilidade na rede ao centralizar as comunicações, ele permite um desacoplamento entre as partes comunicantes, algo não possível em modelos de comunicação do tipo cliente/servidor.
+A identificação das mensagens no MQTT se dá através de tópicos (topics). O tópico lembra o conceito de URI, com níveis separados por barras (“/”). Elementos da rede podem enviar diversos tópicos para o broker e subscritores podem escolher os tópicos que desejam subscrever.
+Os nossos tópicos configurados são G02THEBESTGROUP/MEDICOES que efetuam a transição de medições da raspberry pra view e  G02THEBESTGROUP/INTERVALO que faz a comunicação da mudança de intervalo pra raspberry.
 
 ## Diagrama do sistema
 ![diagrama](/telas/diagrama.png)
