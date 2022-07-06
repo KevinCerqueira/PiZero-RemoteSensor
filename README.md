@@ -43,6 +43,20 @@ Os nossos tópicos configurados são G02THEBESTGROUP/MEDICOES que efetuam a tran
 
 ### Parte Raspberry
 
+Responsável por coletar medidas, mostrar medidas no lcd, enviar medidas para o broker, e receber mudanças de intervalo da Parte Remota e pelos botões acoplados a raspberry.
+
+Para ler do DHT11, o programa utiliza os métodos digitalWrite() e digitalRead() da biblioteca wiringPi. Para ler medidas dos potenciômetros, são utilizados os métodos read() e write() da biblioteca i2c-dev.
+
+Os valores medidos são guardados em 2 matrizes. Uma para o DHT11 e outra para os potenciômetros. A matriz do DHT11 guarda 4 linhas: 2 linhas para humidade e 2 para temperatura. Cada medida precisa de 2 linhas pois o DHT11 envia uma parte inteira e outra de ponto flutuante em suas medidas. Na matriz dos potenciômetros só existem 2 linhas.
+
+Todas essas medidas e inserções ocorrem em uma thread separada do laço principal do programa, chamada de measure_thread.
+
+Para mostrar mensagens no lcd, foi utilizado o método lcdPrintf() da wiringPi. As mensagens mostradas são controladas belos botões e dip switches na raspberry, utilizando digitalRead() para coletar as entradas do usuário no laço principal do programa e alterar as informações no lcd de acordo.
+
+Para receber e mandar mensagens no broker, antes da inicialização do programa, são feitas duas conexões com o broker, para o subscriber e publisher da raspberry. Quando a conexão subscriber é feita, o mesmo é conectado a um método on_message() utilizando o mosquitto_message_callback_set() da biblioteca mosquitto. Assim, toda vez que o subscriber recebe uma mensagem do broker, esta mensagem é processada no método on_message().
+
+Para o publisher, depois que uma conexão é feita, são utilizados os métodos mosquitto_reconnect(),  mosquitto_publish(), e mosquitto_disconnect() para conectar ao broker, mandar as medidas, e desconectar, respectivamente. Estas publicações ocorrem dentro de measure_thread.
+
 ### Parte Broker
 O Broker (intermediário) faz jus a sua tradução, é o intermedário entre os publishers (publicadores) e subscribers (inscritos) por meio de canais (ou tópicos). Utilizamos o do próprio laboratório (10.0.0.101:1883), mas é possível utilizar qualquer um que seja disponível. No nosso caso, utilizamos dois canais:
  - **Canal 1 (Medições):** Por onde comunicamos as medições, onde o publisher será o que está contido na Raspberry e o subscriber será o que está contido no servidor. Fazemos a comunicação seguindo o template abaixo:
