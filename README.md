@@ -42,7 +42,7 @@ Os nossos tópicos configurados são G02THEBESTGROUP/MEDICOES que efetuam a tran
 ![diagrama](/telas/diagrama.png)
 
 ### Parte Raspberry
-
+![diagrama](/telas/Diagrama_medicoesLCD.png)
 Responsável por coletar medidas, mostrar medidas no lcd, enviar medidas para o broker, e receber mudanças de intervalo da Parte Remota e pelos botões acoplados a raspberry.
 
 Para ler do DHT11, o programa utiliza os métodos digitalWrite() e digitalRead() da biblioteca wiringPi. Para ler medidas dos potenciômetros, são utilizados os métodos read() e write() da biblioteca i2c-dev.
