@@ -14,12 +14,12 @@ Projeto que captura medidas de um sensor DHT11 e dois potenciômetros em uma Ras
     - [Back-End (View)](#back-end-view)
     - [Front-End (View)](#front-end-view)
 - [Pré-requisitos](#pré-requisitos)
-  - [Na Raspberry PI Zero](#na-raspberry-pi)
+  - [Parte Raspberry PI Zero](#parte-raspberry-1)
     - [Utilizando a IHM da Raspberry Pi](#utilizando-a-ihm-da-raspberry-pi)
-  - [No Remoto](#no-remoto)
-- [Startando o projeto](#startando-o-projeto)
-  - [Parte Raspberry](#parte-raspberry)
   - [Parte Remota](#parte-remota-1)
+- [Startando o projeto](#startando-o-projeto)
+  - [Parte Raspberry](#parte-da-raspberry)
+  - [Parte Remota](#parte-remota-2)
 - [Principais telas do sistema](#principais-telas-do-sistema)
 
 ## Requisitos
@@ -59,7 +59,7 @@ Para o publisher, depois que uma conexão é feita, são utilizados os métodos 
 
 ### Parte Broker
 O Broker (intermediário) faz jus a sua tradução, é o intermedário entre os publishers (publicadores) e subscribers (inscritos) por meio de canais (ou tópicos). Utilizamos o do próprio laboratório (10.0.0.101:1883), mas é possível utilizar qualquer um que seja disponível. No nosso caso, utilizamos dois canais:
- - **Canal 1 (Medições):** Por onde comunicamos as medições, onde o publisher será o que está contido na Raspberry e o subscriber será o que está contido no servidor. Fazemos a comunicação seguindo o template abaixo:
+ - **Canal 1 (Medições):** Por onde comunicamos as medições, onde o publisher será o que está contido na Raspberry e o subscriber será o que está contido no servidor (parte Remota). Fazemos a comunicação seguindo o template abaixo:
 ```sh
 key {"H": "0.0", "T": "0.0", "P": "0.0", "L": "0.0", "datetime": "YYYY-mm-dd H:i:s", "interval": "2"}
 ```
@@ -70,7 +70,7 @@ key {"H": "0.0", "T": "0.0", "P": "0.0", "L": "0.0", "datetime": "YYYY-mm-dd H:i
     - L: Luminosidade;
     - datetime: Data e hora da medição;
     - interval: frequência do intervalo atual quando a medição foi tirada.
-  - **Canal 2 (Intervalo):** Por onde comunicamos a frequência do intervalo, onde o publisher será o servidor e o subscriber será a raspberry. Seguindo o seguinte template:
+  - **Canal 2 (Intervalo):** Por onde comunicamos a frequência do intervalo, onde o publisher será o servidor (parte Remota) e o subscriber será a raspberry. Seguindo o seguinte template:
 ```sh
 key {"interval":2}
 ```  
@@ -182,5 +182,5 @@ python src/server/subscriber.py
 ### - Intervalo não editado (retornado erro). 
 ![intervalo_erro](/telas/intervalo_erro.png)
 
-### - LOG do sistema de Subscriber e Publisher do servidor.
+### - LOG do sistema de Subscriber e Publisher da parte Remota.
 ![log](/telas/log.png)
