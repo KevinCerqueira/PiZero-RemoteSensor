@@ -50,8 +50,8 @@ class Publisher:
 		self.mqtt_server = mqtt.Client("G02_THEBESTGROUP_PUB")
 		self.mqtt_server.username_pw_set("aluno", "aluno*123")
 		self.mqtt_server.on_publish = self.on_publish
-		# self.mqtt_server.connect(self.HOST, self.PORT)
-		self.mqtt_server.connect("broker.emqx.io", 1883)
+		self.mqtt_server.connect("10.0.0.101", 1883) # Broker do LEDs
+		# self.mqtt_server.connect("broker.emqx.io", 1883) # Broker online
 		
 		
 		# self.topic = os.getenv('TOPICO_INTERVALO')
