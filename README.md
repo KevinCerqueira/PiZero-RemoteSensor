@@ -1,6 +1,12 @@
 # Problema 03 – IoT: A Internet das Coisas
 
 Projeto que captura medidas de um sensor DHT11 e dois potenciômetros em uma Raspberry Pi Zero, mostrando medidas num display LCD. As medidas também são enviadas para um servidor python, implementando o protocolo de comunicação MQTT, para serem exibidas em uma view remota. Usuários na view podem alterar a frequência na qual as medições são feitas, assim como também podem alterar a mesma frequência nos próprios butões/dipswitch da Raspberry.
+
+# Autores
+- [Esdras Abreu](https://github.com/esdrasabreu)
+- [Guilherme Nobre](https://github.com/Helmeppun)
+- [Kevin Cerqueira](https://github.com/KevinCerqueira)
+
 ## Sumário
 - [Requisitos](#requisitos)
 - [Sobre MQTT](#sobre-mqtt)
