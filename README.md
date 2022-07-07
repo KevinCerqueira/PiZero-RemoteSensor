@@ -158,6 +158,9 @@ python3 src/server/subscriber.py
 ```sh
 python src/server/subscriber.py
 ```
+## ATENÇÃO! Talvez, a depender do seu sistema, será necessário alterar a linha 25 do arquivo src/web/controllers/Controller.php, como mostra na figura abaixo, altere o trecho de código "$_SERVER['REMOTE_ADDR']" para o seu IPv4, por exemplo "10.0.0.109", como é mostrado na linha 24:
+![ipv4](/telas/ipv4.png)
+
 ## E pronto! Após isso tudo, basta acessar em qualquer navegar o link http://localhost/
 ## Principais telas do sistema
 
