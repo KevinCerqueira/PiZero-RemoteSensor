@@ -2,6 +2,8 @@
 
 Projeto que captura medidas de um sensor DHT11 e dois potenciômetros em uma Raspberry Pi Zero, mostrando medidas num display LCD. As medidas também são enviadas para um servidor python, implementando o protocolo de comunicação MQTT, para serem exibidas em uma view remota. Usuários na view podem alterar a frequência na qual as medições são feitas, assim como também podem alterar a mesma frequência nos próprios butões/dipswitch da Raspberry.
 
+[EN] Project that captures measurements from a DHT11 sensor and two potentiometers on a Raspberry Pi Zero, displaying the readings on an LCD. The measurements are also sent to a Python server implementing the MQTT communication protocol to be displayed on a remote view. Users on the remote view can change the frequency at which measurements are taken, as well as adjust the same frequency using the buttons/dipswitch on the Raspberry Pi itself.
+
 # Autores
 - [Esdras Abreu](https://github.com/esdrasabreu)
 - [Guilherme Nobre](https://github.com/Helmeppun)
